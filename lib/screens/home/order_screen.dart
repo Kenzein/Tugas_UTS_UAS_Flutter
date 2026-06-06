@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:money_laundry/providers/order_provider.dart';
 import 'package:money_laundry/screens/home/home_screen.dart';
 import 'package:money_laundry/screens/home/list_order_screen.dart';
 import 'package:money_laundry/models/service.dart';
 import 'package:money_laundry/data/service_data.dart';
+import 'package:provider/provider.dart';
 
 class OrderPage extends StatefulWidget {
   const OrderPage({super.key});
@@ -24,6 +26,7 @@ class _OrderPageState extends State<OrderPage> {
 
   @override
   Widget build(BuildContext context) {
+    final orderProvider = context.read<OrderProvider>();
     return Scaffold(
       backgroundColor: Colors.grey[200],
       body: SafeArea(
@@ -33,7 +36,7 @@ class _OrderPageState extends State<OrderPage> {
             Container(
               padding: const EdgeInsets.all(16),
               decoration: const BoxDecoration(
-                color: Color(0xFF6594B1), // ✅ FIXED
+                color: Color(0xFF6594B1),
                 borderRadius: BorderRadius.only(
                   bottomLeft: Radius.circular(30),
                   bottomRight: Radius.circular(30),
@@ -178,22 +181,30 @@ class _OrderPageState extends State<OrderPage> {
                       //
                       Expanded(
                         child: ElevatedButton(
-                          onPressed: () {},
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFF6594B1),
-                            foregroundColor: Colors.white,
-                            shape: const StadiumBorder(),
-                          ),
-                          child: const Text("Simpan"),
-                        ),
-                      ),
-
-                      const SizedBox(width: 10),
-
-                      //
-                      Expanded(
-                        child: ElevatedButton(
                           onPressed: () {
+                            if (selectedServices.isEmpty) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text('Pilih minimal satu layanan'),
+                                ),
+                              );
+                              return;
+                            }
+                            orderProvider.addOrder(selectedServices);
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text('Order berhasil disimpan'),
+                                duration: Duration(seconds: 2),
+                                action: SnackBarAction(
+                                  label: 'Oke',
+                                  onPressed: () {
+                                    ScaffoldMessenger.of(
+                                      context,
+                                    ).hideCurrentSnackBar();
+                                  },
+                                ),
+                              ),
+                            );
                             Navigator.push(
                               context,
                               MaterialPageRoute(
@@ -206,9 +217,31 @@ class _OrderPageState extends State<OrderPage> {
                             foregroundColor: Colors.white,
                             shape: const StadiumBorder(),
                           ),
-                          child: const Text("Process"),
+                          child: const Text("Simpan"),
                         ),
                       ),
+
+                      const SizedBox(width: 10),
+
+                      //
+                      // Expanded(
+                      //   child: ElevatedButton(
+                      //     onPressed: () {
+                      //       Navigator.push(
+                      //         context,
+                      //         MaterialPageRoute(
+                      //           builder: (_) => const ListOrderScreen(),
+                      //         ),
+                      //       );
+                      //     },
+                      //     style: ElevatedButton.styleFrom(
+                      //       backgroundColor: Colors.orange,
+                      //       foregroundColor: Colors.white,
+                      //       shape: const StadiumBorder(),
+                      //     ),
+                      //     child: const Text("Process"),
+                      //   ),
+                      // ),
                     ],
                   ),
                 ],

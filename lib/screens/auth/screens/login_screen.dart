@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:money_laundry/providers/auth_provider.dart';
 import 'package:money_laundry/screens/auth/exceptions/login_exception.dart';
 import 'package:money_laundry/screens/home/home_screen.dart';
-import 'package:money_laundry/screens/auth/services/auth_service.dart';
 import 'package:money_laundry/widgets/custom_input.dart';
+import 'package:provider/provider.dart';
 import 'register_screen.dart';
 
 class LoginPage extends StatefulWidget {
@@ -15,11 +16,17 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
-  final authService = AuthService();
-  bool isLoading = false;
+
+  @override
+  void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
+    final authProvider = context.watch<AuthProvider>();
     return Scaffold(
       backgroundColor: Color(0xFF6594B1),
       body: SafeArea(
@@ -105,42 +112,39 @@ class _LoginPageState extends State<LoginPage> {
                       width: double.infinity,
                       height: 50,
                       child: ElevatedButton(
-                        onPressed: () async {
-                          setState(() => isLoading = true);
-                          try {
-                            await Future.delayed(Duration(seconds: 2));
+                        onPressed: authProvider.isLoading
+                            ? null
+                            : () async {
+                                try {
+                                  await authProvider.login(
+                                    emailController.text.trim(),
+                                    passwordController.text.trim(),
+                                  );
 
-                            authService.login(
-                              emailController.text,
-                              passwordController.text,
-                            );
+                                  if (!context.mounted) return;
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (_) => HomePage(),
+                                    ),
+                                  );
+                                } catch (e) {
+                                  final message = e is LoginException
+                                      ? e.message
+                                      : 'Terjadi kesalahan saat login';
 
-                            if (!context.mounted) return;
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(builder: (_) => HomePage()),
-                            );
-                          } catch (e) {
-                            final message = e is LoginException
-                                ? e.message
-                                : 'Terjadi kesalahan saat login';
-
-                            ScaffoldMessenger.of(
-                              context,
-                            ).showSnackBar(SnackBar(content: Text(message)));
-                          } finally {
-                            if (mounted) {
-                              setState(() => isLoading = false);
-                            }
-                          }
-                        },
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(content: Text(message)),
+                                  );
+                                }
+                              },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Color(0xFF6594B1),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(30),
                           ),
                         ),
-                        child: isLoading
+                        child: authProvider.isLoading
                             ? CircularProgressIndicator(color: Colors.white)
                             : Text(
                                 "Login",
@@ -153,20 +157,6 @@ class _LoginPageState extends State<LoginPage> {
                     ),
 
                     SizedBox(height: 10),
-
-                    /// FORGOT PASSWORD
-                    // Center(
-                    //   child: TextButton(
-                    //     onPressed: () {},
-                    //     child: Text(
-                    //       "Forgot Password",
-                    //       style: TextStyle(
-                    //         color: Color(0xffFF714B),
-                    //         fontWeight: FontWeight.bold,
-                    //       ),
-                    //     ),
-                    //   ),
-                    // ),
                     Center(
                       child: TextButton(
                         onPressed: () {

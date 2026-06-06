@@ -7,8 +7,10 @@ environment:
   sdk: ^3.11.4
 
 dependencies:
+  dio: ^5.9.2
   flutter:
     sdk: flutter
+  provider: ^6.1.5+1
 
 dev_dependencies:
   flutter_test:
