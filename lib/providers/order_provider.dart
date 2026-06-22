@@ -22,8 +22,8 @@ class OrderProvider extends ChangeNotifier {
     );
   }
 
-  void updateStatus(int index, String status) {
-    _orders[index].status = status;
+  void updateStatus(int index, String newStatus) {
+    _orders[index].status = newStatus;
     notifyListeners();
   }
 

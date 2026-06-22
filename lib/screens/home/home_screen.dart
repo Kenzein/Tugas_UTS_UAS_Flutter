@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:money_laundry/screens/home/order_screen.dart';
-import 'package:money_laundry/screens/home/list_order_screen.dart';
-import 'package:money_laundry/screens/home/report_screen.dart';
+import 'package:money_laundry/screens/home/order_screen/order_screen.dart';
+import 'package:money_laundry/screens/home/list_order_screen/list_order_screen.dart';
+import 'package:money_laundry/screens/home/report_screen/report_screen.dart';
 import 'package:money_laundry/widgets/app_sidebar.dart';
-import 'package:money_laundry/screens/home/support_screen.dart';
+import 'package:money_laundry/screens/home/support_screen/support_screen.dart';
 import 'package:money_laundry/widgets/menu_item.dart';
 
 class HomePage extends StatelessWidget {

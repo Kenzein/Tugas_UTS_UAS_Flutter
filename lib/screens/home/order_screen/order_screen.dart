@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:money_laundry/providers/order_provider.dart';
 import 'package:money_laundry/screens/home/home_screen.dart';
-import 'package:money_laundry/screens/home/list_order_screen.dart';
+import 'package:money_laundry/screens/home/list_order_screen/list_order_screen.dart';
 import 'package:money_laundry/models/service.dart';
 import 'package:money_laundry/data/service_data.dart';
 import 'package:provider/provider.dart';
@@ -192,24 +192,23 @@ class _OrderPageState extends State<OrderPage> {
                             }
                             orderProvider.addOrder(selectedServices);
                             ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
+                              const SnackBar(
                                 content: Text('Order berhasil disimpan'),
-                                duration: Duration(seconds: 2),
-                                action: SnackBarAction(
-                                  label: 'Oke',
-                                  onPressed: () {
-                                    ScaffoldMessenger.of(
-                                      context,
-                                    ).hideCurrentSnackBar();
-                                  },
-                                ),
+                                duration: Duration(seconds: 1),
                               ),
                             );
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (_) => const ListOrderScreen(),
-                              ),
+
+                            Future.delayed(
+                              const Duration(milliseconds: 1100),
+                              () {
+                                if (!context.mounted) return;
+                                Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (_) => const ListOrderScreen(),
+                                  ),
+                                );
+                              },
                             );
                           },
                           style: ElevatedButton.styleFrom(
@@ -222,26 +221,6 @@ class _OrderPageState extends State<OrderPage> {
                       ),
 
                       const SizedBox(width: 10),
-
-                      //
-                      // Expanded(
-                      //   child: ElevatedButton(
-                      //     onPressed: () {
-                      //       Navigator.push(
-                      //         context,
-                      //         MaterialPageRoute(
-                      //           builder: (_) => const ListOrderScreen(),
-                      //         ),
-                      //       );
-                      //     },
-                      //     style: ElevatedButton.styleFrom(
-                      //       backgroundColor: Colors.orange,
-                      //       foregroundColor: Colors.white,
-                      //       shape: const StadiumBorder(),
-                      //     ),
-                      //     child: const Text("Process"),
-                      //   ),
-                      // ),
                     ],
                   ),
                 ],
