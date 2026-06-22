@@ -20,7 +20,7 @@ class AuthService {
       throw LoginException('Password minimal memiliki 6 karakter');
     }
 
-    if (email != "mikir@abc" || password != "123456") {
+    if (email != "user@gmail.com" || password != "123456") {
       throw LoginException('Email atau password salah');
     }
   }

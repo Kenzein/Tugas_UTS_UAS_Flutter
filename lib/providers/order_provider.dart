@@ -22,6 +22,11 @@ class OrderProvider extends ChangeNotifier {
     );
   }
 
+  void updateStatus(int index, String status) {
+    _orders[index].status = status;
+    notifyListeners();
+  }
+
   void deleteOrder(int index) {
     _orders.removeAt(index);
     notifyListeners();

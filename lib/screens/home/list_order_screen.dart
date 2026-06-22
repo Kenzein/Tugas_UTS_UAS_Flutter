@@ -24,16 +24,36 @@ class ListOrderScreen extends StatelessWidget {
           return Card(
             margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             child: ListTile(
-              title: Text("Order #${index + 1}"),
-              subtitle: Text(
-                'Status: ${order.status}',
+              title: Text(
+                "Order #${index + 1}",
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
+              subtitle: Text(
+                'Status: ${order.status}',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: getStatusColor(order.status),
+                ),
+              ),
+
               trailing: Text("Rp ${order.total}"),
             ),
           );
         },
       ),
     );
+  }
+
+  Color getStatusColor(String status) {
+    switch (status) {
+      case 'Pending':
+        return Colors.orange;
+      case 'Proses':
+        return Colors.blue;
+      case 'Selesai':
+        return Colors.green;
+      default:
+        return Colors.grey;
+    }
   }
 }

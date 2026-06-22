@@ -4,7 +4,7 @@ class OrderModel {
   final List<Service> services;
   final int total;
   final DateTime createdAt;
-  final String status;
+  String status;
 
   OrderModel({
     required this.services,
