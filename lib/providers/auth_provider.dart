@@ -3,8 +3,10 @@ import 'package:money_laundry/screens/auth/services/auth_service.dart';
 
 class AuthProvider extends ChangeNotifier {
   final AuthService _authService = AuthService();
+
   bool _isLoading = false;
   bool _isLoggedIn = false;
+
   bool get isLoading => _isLoading;
   bool get isLoggedIn => _isLoggedIn;
 
@@ -13,17 +15,28 @@ class AuthProvider extends ChangeNotifier {
     notifyListeners();
 
     try {
-      await Future.delayed(const Duration(seconds: 2));
-      _authService.login(email, password);
+
+      await _authService.login(email, password);
+
       _isLoggedIn = true;
+    } catch (e) {
+      rethrow;
     } finally {
       _isLoading = false;
       notifyListeners();
     }
   }
 
-  void logout() {
+  Future<void> logout() async {
+    await _authService.logout();
+
     _isLoggedIn = false;
+
+    notifyListeners();
+  }
+
+  Future<void> checkLogin() async {
+    _isLoggedIn = _authService.currentUser != null;
     notifyListeners();
   }
 }

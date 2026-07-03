@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:money_laundry/providers/auth_provider.dart';
 import 'package:money_laundry/screens/auth/exceptions/login_exception.dart';
+import 'package:money_laundry/screens/auth/screens/register_screen.dart';
 import 'package:money_laundry/screens/home/home_screen.dart';
 import 'package:money_laundry/widgets/custom_input.dart';
 import 'package:provider/provider.dart';
-import 'register_screen.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -24,27 +24,59 @@ class _LoginPageState extends State<LoginPage> {
     super.dispose();
   }
 
+  Future<void> _login() async {
+    final authProvider = context.read<AuthProvider>();
+
+    try {
+      await authProvider.login(
+        emailController.text.trim(),
+        passwordController.text.trim(),
+      );
+
+      if (!mounted) return;
+
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (_) => const HomePage(),
+        ),
+      );
+    } on LoginException catch (e) {
+      if (!mounted) return;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(e.message)),
+      );
+    } catch (e) {
+      if (!mounted) return;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Terjadi kesalahan, silakan coba lagi."),
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final authProvider = context.watch<AuthProvider>();
+
     return Scaffold(
-      backgroundColor: Color(0xFF6594B1),
+      backgroundColor: const Color(0xFF6594B1),
       body: SafeArea(
         child: Column(
           children: [
-            ///TOP SECTION
             Expanded(
               flex: 2,
               child: Padding(
                 padding: const EdgeInsets.all(20),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const SizedBox(height: 150),
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: const [
                     Text(
                       "Hello!",
-                      textAlign: TextAlign.left,
                       style: TextStyle(
                         fontSize: 60,
                         fontWeight: FontWeight.bold,
@@ -52,33 +84,35 @@ class _LoginPageState extends State<LoginPage> {
                         height: 1,
                       ),
                     ),
-                    SizedBox(height: 1),
+                    SizedBox(height: 5),
                     Text(
-                      "Welcome to money laundry",
+                      "Welcome to Money Laundry",
                       style: TextStyle(
-                        fontSize: 20,
+                        fontSize: 18,
                         color: Colors.white,
-                        height: 1.1,
                       ),
                     ),
+                    SizedBox(height: 40),
                   ],
                 ),
               ),
             ),
 
-            ///BOTTOM CARD
             Expanded(
               flex: 3,
               child: Container(
-                padding: EdgeInsets.all(30),
-                decoration: BoxDecoration(
+                padding: const EdgeInsets.all(30),
+                decoration: const BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
+                  borderRadius: BorderRadius.vertical(
+                    top: Radius.circular(30),
+                  ),
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
+
+                    const Text(
                       "Login",
                       style: TextStyle(
                         fontSize: 30,
@@ -87,9 +121,8 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     ),
 
-                    SizedBox(height: 20),
+                    const SizedBox(height: 20),
 
-                    // Custom Input
                     CustomInput(
                       label: "Email",
                       controller: emailController,
@@ -97,75 +130,61 @@ class _LoginPageState extends State<LoginPage> {
                     ),
 
                     const SizedBox(height: 15),
-                    // Custom Input Pass
+
                     CustomInput(
-                      label: 'Password',
+                      label: "Password",
                       controller: passwordController,
                       isPassword: true,
                       icon: Icons.lock,
                     ),
 
-                    SizedBox(height: 25),
+                    const SizedBox(height: 25),
 
-                    /// BUTTON
                     SizedBox(
                       width: double.infinity,
                       height: 50,
                       child: ElevatedButton(
                         onPressed: authProvider.isLoading
                             ? null
-                            : () async {
-                                try {
-                                  await authProvider.login(
-                                    emailController.text.trim(),
-                                    passwordController.text.trim(),
-                                  );
-
-                                  if (!context.mounted) return;
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (_) => HomePage(),
-                                    ),
-                                  );
-                                } catch (e) {
-                                  final message = e is LoginException
-                                      ? e.message
-                                      : 'Terjadi kesalahan saat login';
-
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(content: Text(message)),
-                                  );
-                                }
-                              },
+                            : _login,
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Color(0xFF6594B1),
+                          backgroundColor: const Color(0xFF6594B1),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(30),
                           ),
                         ),
                         child: authProvider.isLoading
-                            ? CircularProgressIndicator(color: Colors.white)
-                            : Text(
+                            ? const SizedBox(
+                                width: 24,
+                                height: 24,
+                                child: CircularProgressIndicator(
+                                  color: Colors.white,
+                                  strokeWidth: 3,
+                                ),
+                              )
+                            : const Text(
                                 "Login",
                                 style: TextStyle(
-                                  fontSize: 20,
+                                  fontSize: 18,
                                   color: Colors.white,
                                 ),
                               ),
                       ),
                     ),
 
-                    SizedBox(height: 10),
+                    const SizedBox(height: 10),
+
                     Center(
                       child: TextButton(
                         onPressed: () {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (_) => RegisterPage()),
+                            MaterialPageRoute(
+                              builder: (_) =>  RegisterPage(),
+                            ),
                           );
                         },
-                        child: Text(
+                        child: const Text(
                           "Don't have an account? Sign Up",
                           style: TextStyle(
                             color: Color(0xffFF714B),
@@ -174,6 +193,7 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                       ),
                     ),
+
                   ],
                 ),
               ),

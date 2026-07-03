@@ -7,16 +7,21 @@ environment:
   sdk: ^3.11.4
 
 dependencies:
-  dio: ^5.9.2
+  dio: 
   flutter:
     sdk: flutter
-  provider: ^6.1.5+1
+  provider: 
+  firebase_core: 
+  firebase_auth: 
+  cloud_firestore: 
+
+
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^6.0.0
-  flutter_native_splash: ^2.3.0
+  flutter_lints: 
+  flutter_native_splash:
 
 flutter:
   uses-material-design: true

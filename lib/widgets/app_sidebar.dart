@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import 'package:money_laundry/providers/profile_provider.dart';
+import 'package:money_laundry/providers/auth_provider.dart';
+
 import 'package:money_laundry/screens/about.dart';
 import 'package:money_laundry/screens/auth/screens/login_screen.dart';
 import 'package:money_laundry/screens/profile_page.dart';
@@ -8,82 +13,110 @@ class AppSidebar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final profileProvider = context.watch<ProfileProvider>();
+    final user = profileProvider.user;
+
     return Drawer(
       child: Column(
         children: [
-          // Header
           UserAccountsDrawerHeader(
-            accountName: Text('Kenzy', style: TextStyle(color: Colors.black12)),
-            accountEmail: Text('valencia@gmail.com'),
-            currentAccountPicture: CircleAvatar(
-              child: ClipOval(
-                child: Image(
-                  image: AssetImage('./assets/images/appside.jpg'),
-                  width: 90,
-                  height: 90,
-                  fit: BoxFit.cover,
-                ),
+            accountName: Text(
+              user?.name ?? "Loading...",
+              style: const TextStyle(
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
               ),
             ),
-            decoration: BoxDecoration(
+
+            accountEmail: Text(
+              user?.email ?? "",
+              style: const TextStyle(
+                color: Colors.white,
+              ),
+            ),
+
+            currentAccountPicture: const CircleAvatar(
+              backgroundImage: AssetImage(
+                "assets/images/appside.jpg",
+              ),
+            ),
+
+            decoration: const BoxDecoration(
               image: DecorationImage(
-                image: AssetImage('./assets/images/background.jpeg'),
+                image: AssetImage(
+                  "assets/images/background.jpeg",
+                ),
                 fit: BoxFit.cover,
               ),
             ),
           ),
-          // Menu Tengah
+
           Expanded(
             child: ListView(
               children: [
-                //  Profile
+
                 ListTile(
-                  leading: Icon(Icons.account_circle),
-                  title: Text('Profile'),
-                  onTap: () => {
+                  leading: const Icon(Icons.person),
+                  title: const Text("Profile"),
+                  onTap: () {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const ProfilePage(),
+                        builder: (_) => const ProfilePage(),
                       ),
-                    ),
+                    );
                   },
                 ),
-                // About
+
                 ListTile(
-                  leading: Icon(Icons.info),
-                  title: Text('About'),
-                  onTap: () => {
+                  leading: const Icon(Icons.info),
+                  title: const Text("About"),
+                  onTap: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => const About()),
-                    ),
+                      MaterialPageRoute(
+                        builder: (_) => const About(),
+                      ),
+                    );
                   },
                 ),
-                // Settings
-                ListTile(
-                  leading: Icon(Icons.settings, color: Colors.grey),
-                  title: Text('Settings', style: TextStyle(color: Colors.grey)),
-                  onTap: () => {},
+
+                const ListTile(
+                  leading: Icon(Icons.settings),
+                  title: Text("Settings"),
                 ),
+
               ],
             ),
           ),
-          // Menu bawah
-          Divider(),
-          // Logout
+
+          const Divider(),
+
           ListTile(
-            leading: Icon(Icons.logout, color: Colors.red),
-            title: Text('LogOut', style: TextStyle(color: Colors.red)),
-            onTap: () {
-              Navigator.pop(context);
+            leading: const Icon(
+              Icons.logout,
+              color: Colors.red,
+            ),
+            title: const Text(
+              "Logout",
+              style: TextStyle(color: Colors.red),
+            ),
+            onTap: () async {
+
+              await context.read<AuthProvider>().logout();
+
+              if (!context.mounted) return;
+
               Navigator.pushAndRemoveUntil(
                 context,
-                MaterialPageRoute(builder: (context) => const LoginPage()),
+                MaterialPageRoute(
+                  builder: (_) => LoginPage(),
+                ),
                 (route) => false,
               );
             },
           ),
+
           const SizedBox(height: 20),
         ],
       ),

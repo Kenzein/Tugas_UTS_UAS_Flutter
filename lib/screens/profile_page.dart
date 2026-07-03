@@ -1,116 +1,236 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:money_laundry/providers/profile_provider.dart';
+import 'package:money_laundry/providers/auth_provider.dart';
+import 'package:money_laundry/screens/auth/screens/login_screen.dart';
 
-class ProfilePage extends StatelessWidget {
+class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
 
   @override
+  State<ProfilePage> createState() => _ProfilePageState();
+}
+
+class _ProfilePageState extends State<ProfilePage> {
+  @override
+  void initState() {
+    super.initState();
+
+    Future.microtask(() {
+      context.read<ProfileProvider>().loadUser();
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final profile = context.watch<ProfileProvider>();
+
+    if (profile.isLoading) {
+      return const Scaffold(
+        body: Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+    }
+
+    if (profile.user == null) {
+      return const Scaffold(
+        body: Center(
+          child: Text("Data user tidak ditemukan"),
+        ),
+      );
+    }
+
+    final user = profile.user!;
+
     return Scaffold(
-      backgroundColor: Color(0xFF6594B1), // pusat warna utama
+      backgroundColor: const Color(0xFF6594B1),
+
       appBar: AppBar(
-        title: const Text("Profile"),
-        centerTitle: true,
-        backgroundColor: Color(0xFF6594B1),
         elevation: 0,
+        centerTitle: true,
+        title: const Text(
+          "Profile",
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        backgroundColor: const Color(0xFF6594B1),
         foregroundColor: Colors.white,
       ),
+
       body: SingleChildScrollView(
         child: Column(
           children: [
-            const SizedBox(height: 30),
 
-            // Avatar
+            const SizedBox(height: 25),
+
+            Center(
+              child: CircleAvatar(
+                radius: 60,
+                backgroundColor: Colors.white,
+                child: CircleAvatar(
+                  radius: 56,
+                  backgroundImage: user.photo.isNotEmpty
+                      ? NetworkImage(user.photo)
+                      : const AssetImage("assets/images/appside.jpg")
+                          as ImageProvider,
+                ),
+              ),
+            ),
+
+            const SizedBox(height: 20),
+
+            Text(
+              user.name,
+              style: const TextStyle(
+                fontSize: 30,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
+            ),
+
+            const SizedBox(height: 8),
+
+            Text(
+              user.email,
+              style: const TextStyle(
+                fontSize: 17,
+                color: Colors.white70,
+              ),
+            ),
+
+            const SizedBox(height: 35),
+
             Container(
-              decoration: const BoxDecoration(
-                shape: BoxShape.circle,
+              margin: const EdgeInsets.symmetric(horizontal: 20),
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(25),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black26,
-                    blurRadius: 10,
-                    offset: Offset(0, 5),
+                    color: Colors.black.withOpacity(.15),
+                    blurRadius: 12,
+                    offset: const Offset(0, 5),
                   ),
                 ],
               ),
-              child: const CircleAvatar(
-                radius: 55,
-                backgroundImage: AssetImage(
-                  'assets/images/appside.jpg', // path sudah benar
+
+              child: Column(
+                children: [
+
+                  _buildInfoTile(
+                    Icons.person,
+                    "Nama",
+                    user.name,
+                  ),
+
+                  const Divider(),
+
+                  _buildInfoTile(
+                    Icons.email,
+                    "Email",
+                    user.email,
+                  ),
+
+                  const Divider(),
+
+                  _buildInfoTile(
+                    Icons.phone,
+                    "Nomor HP",
+                    user.phone,
+                  ),
+                ],
+              ),
+            ),
+
+            const SizedBox(height: 30),
+
+            SizedBox(
+              width: 250,
+              height: 50,
+              child: ElevatedButton.icon(
+                onPressed: () {
+
+                  // kita isi pada tahap berikutnya
+
+                },
+                icon: const Icon(Icons.edit),
+                label: const Text(
+                  "Edit Profile",
+                  style: TextStyle(fontSize: 16),
+                ),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.white,
+                  foregroundColor: const Color(0xFF6594B1),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30),
+                  ),
                 ),
               ),
             ),
 
             const SizedBox(height: 15),
 
-            // Nama
-            const Text(
-              "Valencia",
-              style: TextStyle(
-                fontSize: 22,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              ),
-            ),
+            SizedBox(
+              width: 250,
+              height: 50,
+              child: ElevatedButton.icon(
+                onPressed: () async {
 
-            // Email
-            const Text(
-              "valencia@gmail.com",
-              style: TextStyle(color: Colors.white),
-            ),
+                  await context.read<AuthProvider>().logout();
 
-            const SizedBox(height: 25),
+                  if (!mounted) return;
 
-            // Card Info (tetap putih biar kontras)
-            Container(
-              margin: const EdgeInsets.all(20),
-              padding: const EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: Column(
-                children: const [
-                  ListTile(
-                    leading: Icon(Icons.person),
-                    title: Text("Nama"),
-                    subtitle: Text("Valencia"),
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => LoginPage(),
+                    ),
+                    (route) => false,
+                  );
+                },
+                icon: const Icon(Icons.logout),
+                label: const Text(
+                  "Logout",
+                  style: TextStyle(fontSize: 16),
+                ),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.red,
+                  foregroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30),
                   ),
-                  Divider(),
-                  ListTile(
-                    leading: Icon(Icons.email),
-                    title: Text("Email"),
-                    subtitle: Text("valencia@gmail.com"),
-                  ),
-                  Divider(),
-                  ListTile(
-                    leading: Icon(Icons.phone),
-                    title: Text("Phone"),
-                    subtitle: Text("08123456789"),
-                  ),
-                ],
-              ),
-            ),
-
-            const SizedBox(height: 10),
-
-            // Button
-            ElevatedButton.icon(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.white,
-                foregroundColor: Color(0xFF6594B1),
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 30,
-                  vertical: 12,
                 ),
               ),
-              onPressed: () {},
-              icon: const Icon(Icons.edit),
-              label: const Text("Edit Profile"),
             ),
 
-            const SizedBox(height: 30),
+            const SizedBox(height: 40),
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildInfoTile(
+      IconData icon,
+      String title,
+      String value,
+      ) {
+    return ListTile(
+      leading: Icon(
+        icon,
+        color: const Color(0xFF6594B1),
+      ),
+      title: Text(
+        title,
+        style: const TextStyle(
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+      subtitle: Text(value),
     );
   }
 }

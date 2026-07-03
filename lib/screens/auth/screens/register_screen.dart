@@ -11,20 +11,67 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
-  final authService = AuthService();
+  final AuthService authService = AuthService();
+
+  final nameController = TextEditingController();
   final emailController = TextEditingController();
+  final phoneController = TextEditingController();
   final passwordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
-  final phoneController = TextEditingController();
+
   bool isLoading = false;
 
   @override
   void dispose() {
+    nameController.dispose();
     emailController.dispose();
+    phoneController.dispose();
     passwordController.dispose();
     confirmPasswordController.dispose();
-    phoneController.dispose();
     super.dispose();
+  }
+
+  Future<void> _register() async {
+    setState(() => isLoading = true);
+
+    try {
+      await authService.register(
+        nameController.text.trim(),
+        emailController.text.trim(),
+        passwordController.text.trim(),
+        confirmPasswordController.text.trim(),
+        phoneController.text.trim(),
+      );
+
+      if (!mounted) return;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Register berhasil"),
+          backgroundColor: Colors.green,
+        ),
+      );
+
+      Navigator.pop(context);
+    } on RegisterException catch (e) {
+      if (!mounted) return;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(e.message)),
+      );
+    } catch (e) {
+      if (!mounted) return;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Terjadi kesalahan, silakan coba lagi."),
+        ),
+      );
+    } finally {
+      if (mounted) {
+        setState(() => isLoading = false);
+      }
+    }
   }
 
   @override
@@ -34,150 +81,119 @@ class _RegisterPageState extends State<RegisterPage> {
       body: SafeArea(
         child: Column(
           children: [
-            const Expanded(flex: 2, child: SizedBox()),
-
+            const Expanded(
+              flex: 2,
+              child: SizedBox(),
+            ),
             Expanded(
               flex: 5,
               child: Container(
                 padding: const EdgeInsets.all(20),
                 decoration: const BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
-                ),
-                child: Form(
-                  child: ListView(
-                    children: [
-                      /// Back Button
-                      Row(
-                        children: [
-                          IconButton(
-                            onPressed: () {
-                              Navigator.pop(context);
-                            },
-                            icon: const Icon(
-                              Icons.arrow_back,
-                              color: Color(0xFF6594B1),
-                            ),
-                          ),
-                        ],
-                      ),
-
-                      const SizedBox(height: 10),
-
-                      /// Title
-                      const Text(
-                        "Sign Up",
-                        style: TextStyle(
-                          fontSize: 28,
-                          fontWeight: FontWeight.bold,
-                          color: Color(0xFF6594B1),
-                        ),
-                      ),
-
-                      const SizedBox(height: 25),
-
-                      /// Email
-                      CustomInput(
-                        label: 'Email',
-                        controller: emailController,
-                        icon: Icons.email,
-                      ),
-
-                      const SizedBox(height: 15),
-
-                      /// Password
-                      CustomInput(
-                        label: 'Password',
-                        controller: passwordController,
-                        icon: Icons.lock,
-                        isPassword: true,
-                      ),
-
-                      const SizedBox(height: 15),
-
-                      /// Confirm Password
-                      CustomInput(
-                        label: 'Confirm Password',
-                        controller: confirmPasswordController,
-                        icon: Icons.lock,
-                        isPassword: true,
-                      ),
-
-                      const SizedBox(height: 15),
-
-                      /// Phone
-                      CustomInput(
-                        label: 'Phone',
-                        controller: phoneController,
-                        icon: Icons.phone,
-                      ),
-
-                      const SizedBox(height: 25),
-
-                      /// Regis Button
-                      SizedBox(
-                        height: 50,
-                        child: ElevatedButton(
-                          onPressed: isLoading
-                              ? null
-                              : () async {
-                                  setState(() => isLoading = true);
-                                  try {
-                                    await Future.delayed(
-                                      const Duration(seconds: 2),
-                                    );
-
-                                    authService.register(
-                                      emailController.text.trim(),
-                                      passwordController.text.trim(),
-                                      confirmPasswordController.text.trim(),
-                                      phoneController.text.trim(),
-                                    );
-                                    if (!context.mounted) return;
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      const SnackBar(
-                                        content: Text('Register berhasil'),
-                                      ),
-                                    );
-                                    await Future.delayed(
-                                      const Duration(seconds: 1),
-                                    );
-                                    if (!context.mounted) return;
-                                    Navigator.pop(context);
-                                  } catch (e) {
-                                    final message = e is RegisterException
-                                        ? e.message
-                                        : 'Terjadi kesalahan saat register';
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(content: Text(message)),
-                                    );
-                                  } finally {
-                                    if (mounted) {
-                                      setState(() => isLoading = false);
-                                    }
-                                  }
-                                },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFF6594B1),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(30),
-                            ),
-                          ),
-                          child: isLoading
-                              ? const CircularProgressIndicator(
-                                  color: Colors.white,
-                                )
-                              : const Text(
-                                  "Register",
-                                  style: TextStyle(
-                                    fontSize: 20,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                        ),
-                      ),
-                    ],
+                  borderRadius: BorderRadius.vertical(
+                    top: Radius.circular(30),
                   ),
+                ),
+                child: ListView(
+                  children: [
+                    Row(
+                      children: [
+                        IconButton(
+                          onPressed: () => Navigator.pop(context),
+                          icon: const Icon(
+                            Icons.arrow_back,
+                            color: Color(0xFF6594B1),
+                          ),
+                        ),
+                      ],
+                    ),
+
+                    const SizedBox(height: 10),
+
+                    const Text(
+                      "Sign Up",
+                      style: TextStyle(
+                        fontSize: 28,
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF6594B1),
+                      ),
+                    ),
+
+                    const SizedBox(height: 25),
+
+                    CustomInput(
+                      label: "Full Name",
+                      controller: nameController,
+                      icon: Icons.person,
+                    ),
+
+                    const SizedBox(height: 15),
+
+                    CustomInput(
+                      label: "Email",
+                      controller: emailController,
+                      icon: Icons.email,
+                    ),
+
+                    const SizedBox(height: 15),
+
+                    CustomInput(
+                      label: "Phone Number",
+                      controller: phoneController,
+                      icon: Icons.phone,
+                    ),
+
+                    const SizedBox(height: 15),
+
+                    CustomInput(
+                      label: "Password",
+                      controller: passwordController,
+                      icon: Icons.lock,
+                      isPassword: true,
+                    ),
+
+                    const SizedBox(height: 15),
+
+                    CustomInput(
+                      label: "Confirm Password",
+                      controller: confirmPasswordController,
+                      icon: Icons.lock,
+                      isPassword: true,
+                    ),
+
+                    const SizedBox(height: 30),
+
+                    SizedBox(
+                      width: double.infinity,
+                      height: 50,
+                      child: ElevatedButton(
+                        onPressed: isLoading ? null : _register,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFF6594B1),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30),
+                          ),
+                        ),
+                        child: isLoading
+                            ? const SizedBox(
+                                width: 24,
+                                height: 24,
+                                child: CircularProgressIndicator(
+                                  color: Colors.white,
+                                  strokeWidth: 3,
+                                ),
+                              )
+                            : const Text(
+                                "Register",
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  color: Colors.white,
+                                ),
+                              ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:money_laundry/screens/home/order_screen/order_screen.dart';
-import 'package:money_laundry/screens/home/list_order_screen/list_order_screen.dart';
-import 'package:money_laundry/screens/home/report_screen/report_screen.dart';
+import 'package:money_laundry/screens/home/order_screen.dart';
+import 'package:money_laundry/screens/home/list_order_screen.dart';
+import 'package:money_laundry/screens/home/report_screen.dart';
 import 'package:money_laundry/widgets/app_sidebar.dart';
-import 'package:money_laundry/screens/home/support_screen/support_screen.dart';
+import 'package:money_laundry/screens/home/support_screen.dart';
 import 'package:money_laundry/widgets/menu_item.dart';
 
 class HomePage extends StatelessWidget {
@@ -16,7 +16,7 @@ class HomePage extends StatelessWidget {
       backgroundColor: Colors.white,
       body: SafeArea(
         child: Stack(
-          children: [
+          children: [ 
             Column(
               children: [
                 Container(
@@ -33,12 +33,11 @@ class HomePage extends StatelessWidget {
                       Center(
                         child: Image.asset(
                           'assets/images/Logo.png',
-                          width: 2000,
-                          height: 2000,
+                          width: 8000, 
+                          height: 8000,
                           fit: BoxFit.contain,
                         ),
                       ),
-
                       Positioned(
                         top: 10,
                         right: 10,
@@ -120,10 +119,11 @@ class HomePage extends StatelessWidget {
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
                       mainAxisSpacing: 10,
-                      crossAxisSpacing: 6,
-                      childAspectRatio: 1,
+                      crossAxisSpacing: 16,
+                      // ERROR DIPERBAIKI: Menghapus properti yang salah dan menyisakan satu yang benar
+                      childAspectRatio: 1.3, 
                       children: [
-                        MenuItem(
+                         MenuItem(
                           imagePath: 'assets/images/order.jpg',
                           title: 'Order',
                           page: const OrderPage(),
@@ -143,13 +143,13 @@ class HomePage extends StatelessWidget {
                           title: 'Support',
                           page: const SupportScreen(),
                         ),
-                      ],
+                      ], // ERROR DIPERBAIKI: Menghapus satu penutup ']' yang berlebihan
                     ),
                   ],
                 ),
               ),
             ),
-          ],
+          ], 
         ),
       ),
     );
