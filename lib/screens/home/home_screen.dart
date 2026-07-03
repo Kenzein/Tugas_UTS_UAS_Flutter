@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:money_laundry/screens/home/order_screen.dart';
-import 'package:money_laundry/screens/home/list_order_screen.dart';
-import 'package:money_laundry/screens/home/report_screen.dart';
+import 'package:money_laundry/screens/home/order_screen/order_screen.dart';
+import 'package:money_laundry/screens/home/list_order_screen/list_order_screen.dart';
+import 'package:money_laundry/screens/home/report_screen/report_screen.dart';
 import 'package:money_laundry/widgets/app_sidebar.dart';
-import 'package:money_laundry/screens/home/support_screen.dart';
+import 'package:money_laundry/screens/home/support_screen/support_screen.dart';
 import 'package:money_laundry/widgets/menu_item.dart';
 
 class HomePage extends StatelessWidget {
@@ -16,7 +16,7 @@ class HomePage extends StatelessWidget {
       backgroundColor: Colors.white,
       body: SafeArea(
         child: Stack(
-          children: [ 
+          children: [
             Column(
               children: [
                 Container(
@@ -33,7 +33,7 @@ class HomePage extends StatelessWidget {
                       Center(
                         child: Image.asset(
                           'assets/images/Logo.png',
-                          width: 8000, 
+                          width: 8000,
                           height: 8000,
                           fit: BoxFit.contain,
                         ),
@@ -121,9 +121,9 @@ class HomePage extends StatelessWidget {
                       mainAxisSpacing: 10,
                       crossAxisSpacing: 16,
                       // ERROR DIPERBAIKI: Menghapus properti yang salah dan menyisakan satu yang benar
-                      childAspectRatio: 1.3, 
+                      childAspectRatio: 1.3,
                       children: [
-                         MenuItem(
+                        MenuItem(
                           imagePath: 'assets/images/order.jpg',
                           title: 'Order',
                           page: const OrderPage(),
@@ -149,7 +149,7 @@ class HomePage extends StatelessWidget {
                 ),
               ),
             ),
-          ], 
+          ],
         ),
       ),
     );

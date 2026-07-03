@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:money_laundry/providers/profile_provider.dart';
-import 'package:money_laundry/providers/auth_provider.dart';
-import 'package:money_laundry/screens/auth/screens/login_screen.dart';
+import 'package:money_laundry/widgets/profile_page_widget.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -26,18 +25,12 @@ class _ProfilePageState extends State<ProfilePage> {
     final profile = context.watch<ProfileProvider>();
 
     if (profile.isLoading) {
-      return const Scaffold(
-        body: Center(
-          child: CircularProgressIndicator(),
-        ),
-      );
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
 
     if (profile.user == null) {
       return const Scaffold(
-        body: Center(
-          child: Text("Data user tidak ditemukan"),
-        ),
+        body: Center(child: Text("Data user tidak ditemukan")),
       );
     }
 
@@ -51,10 +44,7 @@ class _ProfilePageState extends State<ProfilePage> {
         centerTitle: true,
         title: const Text(
           "Profile",
-          style: TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-          ),
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
         backgroundColor: const Color(0xFF6594B1),
         foregroundColor: Colors.white,
@@ -63,7 +53,6 @@ class _ProfilePageState extends State<ProfilePage> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-
             const SizedBox(height: 25),
 
             Center(
@@ -75,7 +64,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   backgroundImage: user.photo.isNotEmpty
                       ? NetworkImage(user.photo)
                       : const AssetImage("assets/images/appside.jpg")
-                          as ImageProvider,
+                            as ImageProvider,
                 ),
               ),
             ),
@@ -95,10 +84,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
             Text(
               user.email,
-              style: const TextStyle(
-                fontSize: 17,
-                color: Colors.white70,
-              ),
+              style: const TextStyle(fontSize: 17, color: Colors.white70),
             ),
 
             const SizedBox(height: 35),
@@ -111,7 +97,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 borderRadius: BorderRadius.circular(25),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(.15),
+                    color: Colors.black12,
                     blurRadius: 12,
                     offset: const Offset(0, 5),
                   ),
@@ -120,28 +106,15 @@ class _ProfilePageState extends State<ProfilePage> {
 
               child: Column(
                 children: [
-
-                  _buildInfoTile(
-                    Icons.person,
-                    "Nama",
-                    user.name,
-                  ),
+                  buildInfoTile(Icons.person, "Nama", user.name),
 
                   const Divider(),
 
-                  _buildInfoTile(
-                    Icons.email,
-                    "Email",
-                    user.email,
-                  ),
+                  buildInfoTile(Icons.email, "Email", user.email),
 
                   const Divider(),
 
-                  _buildInfoTile(
-                    Icons.phone,
-                    "Nomor HP",
-                    user.phone,
-                  ),
+                  buildInfoTile(Icons.phone, "Nomor HP", user.phone),
                 ],
               ),
             ),
@@ -153,9 +126,7 @@ class _ProfilePageState extends State<ProfilePage> {
               height: 50,
               child: ElevatedButton.icon(
                 onPressed: () {
-
                   // kita isi pada tahap berikutnya
-
                 },
                 icon: const Icon(Icons.edit),
                 label: const Text(
@@ -173,64 +144,9 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
 
             const SizedBox(height: 15),
-
-            SizedBox(
-              width: 250,
-              height: 50,
-              child: ElevatedButton.icon(
-                onPressed: () async {
-
-                  await context.read<AuthProvider>().logout();
-
-                  if (!mounted) return;
-
-                  Navigator.pushAndRemoveUntil(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => LoginPage(),
-                    ),
-                    (route) => false,
-                  );
-                },
-                icon: const Icon(Icons.logout),
-                label: const Text(
-                  "Logout",
-                  style: TextStyle(fontSize: 16),
-                ),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.red,
-                  foregroundColor: Colors.white,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30),
-                  ),
-                ),
-              ),
-            ),
-
-            const SizedBox(height: 40),
           ],
         ),
       ),
-    );
-  }
-
-  Widget _buildInfoTile(
-      IconData icon,
-      String title,
-      String value,
-      ) {
-    return ListTile(
-      leading: Icon(
-        icon,
-        color: const Color(0xFF6594B1),
-      ),
-      title: Text(
-        title,
-        style: const TextStyle(
-          fontWeight: FontWeight.bold,
-        ),
-      ),
-      subtitle: Text(value),
     );
   }
 }

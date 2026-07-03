@@ -11,9 +11,10 @@ dependencies:
   flutter:
     sdk: flutter
   provider: 
-  firebase_core: 
+  firebase_core: ^4.11.0 
   firebase_auth: 
   cloud_firestore: 
+  http: ^1.6.0
 
 
 

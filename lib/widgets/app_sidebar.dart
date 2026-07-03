@@ -4,9 +4,9 @@ import 'package:provider/provider.dart';
 import 'package:money_laundry/providers/profile_provider.dart';
 import 'package:money_laundry/providers/auth_provider.dart';
 
-import 'package:money_laundry/screens/about.dart';
+import 'package:money_laundry/screens/home/sidebar_screen/about.dart';
 import 'package:money_laundry/screens/auth/screens/login_screen.dart';
-import 'package:money_laundry/screens/profile_page.dart';
+import 'package:money_laundry/screens/home/sidebar_screen/profile_page.dart';
 
 class AppSidebar extends StatelessWidget {
   const AppSidebar({super.key});
@@ -30,22 +30,16 @@ class AppSidebar extends StatelessWidget {
 
             accountEmail: Text(
               user?.email ?? "",
-              style: const TextStyle(
-                color: Colors.white,
-              ),
+              style: const TextStyle(color: Colors.white),
             ),
 
             currentAccountPicture: const CircleAvatar(
-              backgroundImage: AssetImage(
-                "assets/images/appside.jpg",
-              ),
+              backgroundImage: AssetImage("assets/images/appside.jpg"),
             ),
 
             decoration: const BoxDecoration(
               image: DecorationImage(
-                image: AssetImage(
-                  "assets/images/background.jpeg",
-                ),
+                image: AssetImage("assets/images/background.jpeg"),
                 fit: BoxFit.cover,
               ),
             ),
@@ -54,16 +48,13 @@ class AppSidebar extends StatelessWidget {
           Expanded(
             child: ListView(
               children: [
-
                 ListTile(
                   leading: const Icon(Icons.person),
                   title: const Text("Profile"),
                   onTap: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(
-                        builder: (_) => const ProfilePage(),
-                      ),
+                      MaterialPageRoute(builder: (_) => const ProfilePage()),
                     );
                   },
                 ),
@@ -74,9 +65,7 @@ class AppSidebar extends StatelessWidget {
                   onTap: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(
-                        builder: (_) => const About(),
-                      ),
+                      MaterialPageRoute(builder: (_) => const About()),
                     );
                   },
                 ),
@@ -85,7 +74,6 @@ class AppSidebar extends StatelessWidget {
                   leading: Icon(Icons.settings),
                   title: Text("Settings"),
                 ),
-
               ],
             ),
           ),
@@ -93,25 +81,16 @@ class AppSidebar extends StatelessWidget {
           const Divider(),
 
           ListTile(
-            leading: const Icon(
-              Icons.logout,
-              color: Colors.red,
-            ),
-            title: const Text(
-              "Logout",
-              style: TextStyle(color: Colors.red),
-            ),
+            leading: const Icon(Icons.logout, color: Colors.red),
+            title: const Text("Logout", style: TextStyle(color: Colors.red)),
             onTap: () async {
-
               await context.read<AuthProvider>().logout();
 
               if (!context.mounted) return;
 
               Navigator.pushAndRemoveUntil(
                 context,
-                MaterialPageRoute(
-                  builder: (_) => LoginPage(),
-                ),
+                MaterialPageRoute(builder: (_) => LoginPage()),
                 (route) => false,
               );
             },
