@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "242383005232",
+    "project_id": "project-money-laundry",
+    "storage_bucket": "project-money-laundry.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:242383005232:android:1f98931bd40e9950edaff5",
+        "android_client_info": {
+          "package_name": "com.example.money_laundry"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAhkM9ksX0fIF5oBNlYs91qnEpl3VR6GqA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

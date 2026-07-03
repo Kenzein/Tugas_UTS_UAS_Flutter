@@ -90,6 +90,24 @@ class OrderProvider extends ChangeNotifier {
         });
   }
 
+  Stream<OrderModel> getOrderById(String orderId) {
+    return _firestore.collection("orders").doc(orderId).snapshots().map((doc) {
+      final data = doc.data()!;
+
+      return OrderModel(
+        id: doc.id,
+        customerName: data["customerName"] ?? "",
+        customerPhone: data["customerPhone"] ?? "",
+        services: (data["services"] as List<dynamic>)
+            .map((e) => Service.fromJson(Map<String, dynamic>.from(e)))
+            .toList(),
+        total: data["total"] ?? 0,
+        status: data["status"] ?? "Pending",
+        createdAt: (data["createdAt"] as Timestamp).toDate(),
+      );
+    });
+  }
+
   Future<void> updateStatus(String orderId, String status) async {
     await _firestore.collection("orders").doc(orderId).update({
       "status": status,

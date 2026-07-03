@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:money_laundry/screens/home/sidebar_screen/edit_profile_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:money_laundry/providers/profile_provider.dart';
 import 'package:money_laundry/widgets/profile_page_widget.dart';
@@ -125,8 +126,17 @@ class _ProfilePageState extends State<ProfilePage> {
               width: 250,
               height: 50,
               child: ElevatedButton.icon(
-                onPressed: () {
-                  // kita isi pada tahap berikutnya
+                onPressed: () async {
+                  await Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => const EditProfileScreen(),
+                    ),
+                  );
+
+                  if (!mounted) return;
+
+                  context.read<ProfileProvider>().loadUser();
                 },
                 icon: const Icon(Icons.edit),
                 label: const Text(

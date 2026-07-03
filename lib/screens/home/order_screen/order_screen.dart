@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:money_laundry/providers/customer_provider.dart';
 import 'package:money_laundry/providers/order_provider.dart';
 import 'package:money_laundry/providers/service_provider.dart';
+import 'package:money_laundry/screens/customers/customer_screen.dart';
 import 'package:money_laundry/screens/home/home_screen.dart';
 import 'package:money_laundry/screens/home/list_order_screen/list_order_screen.dart';
 import 'package:money_laundry/models/service.dart';
@@ -41,7 +42,7 @@ class _OrderPageState extends State<OrderPage> {
   Widget build(BuildContext context) {
     final orderProvider = context.read<OrderProvider>();
     final serviceProvider = context.watch<ServiceProvider>();
-    final customerProvider = context.watch<CustomerProvider>();
+    // final customerProvider = context.watch<CustomerProvider>();
     //
     return Scaffold(
       backgroundColor: Colors.grey[200],
@@ -84,65 +85,42 @@ class _OrderPageState extends State<OrderPage> {
                   const SizedBox(height: 15),
 
                   GestureDetector(
-                    onTap: () {
-                      showModalBottomSheet(
-                        context: context,
-                        builder: (_) {
-                          if (customerProvider.customers.isEmpty) {
-                            return const SizedBox(
-                              height: 200,
-                              child: Center(child: Text("Belum ada customer")),
-                            );
-                          }
-
-                          return ListView.builder(
-                            itemCount: customerProvider.customers.length,
-                            itemBuilder: (context, index) {
-                              final customer =
-                                  customerProvider.customers[index];
-
-                              return ListTile(
-                                leading: const CircleAvatar(
-                                  child: Icon(Icons.person),
-                                ),
-                                title: Text(customer.name),
-                                subtitle: Text(customer.phone),
-                                onTap: () {
-                                  setState(() {
-                                    selectedCustomer = customer;
-                                  });
-
-                                  Navigator.pop(context);
-                                },
-                              );
-                            },
-                          );
-                        },
+                    onTap: () async {
+                      final customer = await Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => const CustomerScreen(),
+                        ),
                       );
+
+                      if (customer != null) {
+                        setState(() {
+                          selectedCustomer = customer;
+                        });
+                      }
                     },
                     child: Container(
+                      height: 50,
                       padding: const EdgeInsets.symmetric(horizontal: 16),
                       decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(25),
                       ),
-                      child: DropdownButtonHideUnderline(
-                        child: DropdownButton<CustomerModel>(
-                          value: selectedCustomer,
-                          isExpanded: true,
-                          hint: const Text("Select Customer"),
-                          items: customerProvider.customers.map((customer) {
-                            return DropdownMenuItem(
-                              value: customer,
-                              child: Text(customer.name),
-                            );
-                          }).toList(),
-                          onChanged: (customer) {
-                            setState(() {
-                              selectedCustomer = customer;
-                            });
-                          },
-                        ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            selectedCustomer == null
+                                ? "Select Customer"
+                                : "${selectedCustomer!.name} (${selectedCustomer!.phone})",
+                            style: TextStyle(
+                              color: selectedCustomer == null
+                                  ? Colors.grey
+                                  : Colors.black,
+                            ),
+                          ),
+                          const Icon(Icons.arrow_forward_ios, size: 18),
+                        ],
                       ),
                     ),
                   ),
@@ -247,9 +225,7 @@ class _OrderPageState extends State<OrderPage> {
                           onPressed: () {
                             Navigator.pushAndRemoveUntil(
                               context,
-                              MaterialPageRoute(
-                                builder: (_) => const HomePage(),
-                              ),
+                              MaterialPageRoute(builder: (_) => HomePage()),
                               (route) => false,
                             );
                           },
@@ -267,44 +243,41 @@ class _OrderPageState extends State<OrderPage> {
                       //
                       Expanded(
                         child: ElevatedButton(
-                          onPressed: () {
+                          onPressed: () async {
                             if (selectedCustomer == null) {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(
                                   content: Text(
-                                    'Pilih Customer terlebih dahulu',
+                                    "Pilih Customer terlebih dahulu",
                                   ),
-                                ),
-                              );
-                            }
-                            if (selectedServices.isEmpty) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text('Pilih minimal satu layanan'),
-                                  duration: Duration(seconds: 1),
                                 ),
                               );
                               return;
                             }
-                            orderProvider.addOrder(
+
+                            if (selectedServices.isEmpty) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text("Pilih minimal satu layanan"),
+                                ),
+                              );
+                              return;
+                            }
+
+                            await orderProvider.addOrder(
                               customerName: selectedCustomer!.name,
                               customerPhone: selectedCustomer!.phone,
                               services: selectedServices,
                             );
+
+                            if (!context.mounted) return;
+
                             ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text('Order berhasil disimpan'),
-                                duration: Duration(seconds: 1),
-                                action: SnackBarAction(
-                                  label: 'Oke',
-                                  onPressed: () {
-                                    ScaffoldMessenger.of(
-                                      context,
-                                    ).hideCurrentSnackBar();
-                                  },
-                                ),
+                              const SnackBar(
+                                content: Text("Order berhasil disimpan"),
                               ),
                             );
+
                             Navigator.push(
                               context,
                               MaterialPageRoute(

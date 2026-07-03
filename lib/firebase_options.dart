@@ -41,46 +41,46 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyDl6D9xw1tvwyWEBwKI-_LtxUbEYEnKytM',
-    appId: '1:492490046863:web:70e60c9ade4963e7ee9ffa',
-    messagingSenderId: '492490046863',
-    projectId: 'money-laundry-2253a',
-    authDomain: 'money-laundry-2253a.firebaseapp.com',
-    storageBucket: 'money-laundry-2253a.firebasestorage.app',
-    measurementId: 'G-L5ZQ2BFFC4',
+    apiKey: 'AIzaSyAzmCLyVX2A5jBfLemw4eQD3vGpM_Z8TAA',
+    appId: '1:242383005232:web:98024c60d10e61c4edaff5',
+    messagingSenderId: '242383005232',
+    projectId: 'project-money-laundry',
+    authDomain: 'project-money-laundry.firebaseapp.com',
+    storageBucket: 'project-money-laundry.firebasestorage.app',
+    measurementId: 'G-Q3FYBK8SLJ',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyBPD0FAyURH9vz0JMMvq641wI-lTSjKb9o',
-    appId: '1:492490046863:android:e04b95c2b4a75bf2ee9ffa',
-    messagingSenderId: '492490046863',
-    projectId: 'money-laundry-2253a',
-    storageBucket: 'money-laundry-2253a.firebasestorage.app',
+    apiKey: 'AIzaSyAhkM9ksX0fIF5oBNlYs91qnEpl3VR6GqA',
+    appId: '1:242383005232:android:1f98931bd40e9950edaff5',
+    messagingSenderId: '242383005232',
+    projectId: 'project-money-laundry',
+    storageBucket: 'project-money-laundry.firebasestorage.app',
   );
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyAuopzWy_PPCA2rA1sfa102Icj2mRFaxPw',
-    appId: '1:492490046863:ios:a4e79b6bf41ecd39ee9ffa',
-    messagingSenderId: '492490046863',
-    projectId: 'money-laundry-2253a',
-    storageBucket: 'money-laundry-2253a.firebasestorage.app',
+    apiKey: 'AIzaSyCe0Zs9z5dAjA1JNIjLwU05T4LnxO6G_4s',
+    appId: '1:242383005232:ios:5983c5d7826ae5fcedaff5',
+    messagingSenderId: '242383005232',
+    projectId: 'project-money-laundry',
+    storageBucket: 'project-money-laundry.firebasestorage.app',
     iosBundleId: 'com.example.moneyLaundry',
   );
   static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyAuopzWy_PPCA2rA1sfa102Icj2mRFaxPw',
-    appId: '1:492490046863:ios:a4e79b6bf41ecd39ee9ffa',
-    messagingSenderId: '492490046863',
-    projectId: 'money-laundry-2253a',
-    storageBucket: 'money-laundry-2253a.firebasestorage.app',
+    apiKey: 'AIzaSyCe0Zs9z5dAjA1JNIjLwU05T4LnxO6G_4s',
+    appId: '1:242383005232:ios:5983c5d7826ae5fcedaff5',
+    messagingSenderId: '242383005232',
+    projectId: 'project-money-laundry',
+    storageBucket: 'project-money-laundry.firebasestorage.app',
     iosBundleId: 'com.example.moneyLaundry',
   );
 
   static const FirebaseOptions windows = FirebaseOptions(
-    apiKey: 'AIzaSyDl6D9xw1tvwyWEBwKI-_LtxUbEYEnKytM',
-    appId: '1:492490046863:web:8e9d6d473f3bc471ee9ffa',
-    messagingSenderId: '492490046863',
-    projectId: 'money-laundry-2253a',
-    authDomain: 'money-laundry-2253a.firebaseapp.com',
-    storageBucket: 'money-laundry-2253a.firebasestorage.app',
-    measurementId: 'G-RN0E2ZFRJL',
+    apiKey: 'AIzaSyAzmCLyVX2A5jBfLemw4eQD3vGpM_Z8TAA',
+    appId: '1:242383005232:web:eb6f7d6578b8b4caedaff5',
+    messagingSenderId: '242383005232',
+    projectId: 'project-money-laundry',
+    authDomain: 'project-money-laundry.firebaseapp.com',
+    storageBucket: 'project-money-laundry.firebasestorage.app',
+    measurementId: 'G-BZ6F2QX07C',
   );
 }

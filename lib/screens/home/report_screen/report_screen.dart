@@ -1,17 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:money_laundry/models/order_model.dart';
 import 'package:money_laundry/providers/order_provider.dart';
+import 'package:money_laundry/widgets/report_table_header.dart';
+import 'package:money_laundry/widgets/report_table_row.dart';
 import 'package:provider/provider.dart';
+import 'package:intl/intl.dart';
 
-class ReportScreen extends StatefulWidget {
+class ReportScreen extends StatelessWidget {
   const ReportScreen({super.key});
-
-  @override
-  State<ReportScreen> createState() => _ReportScreenState();
-}
-
-class _ReportScreenState extends State<ReportScreen> {
-  DateTime startDate = DateTime.now().subtract(const Duration(days: 7));
-  DateTime endDate = DateTime.now();
 
   @override
   Widget build(BuildContext context) {
@@ -19,104 +15,86 @@ class _ReportScreenState extends State<ReportScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Transaction Report"),
+        title: const Text(
+          "Transaction Report",
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        ),
         backgroundColor: const Color(0xFF6594B1),
       ),
 
-      body: StreamBuilder(
-        stream: orderProvider.getOrdersByDateRange(startDate, endDate),
+      body: StreamBuilder<List<OrderModel>>(
+        stream: orderProvider.getOrders(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
           }
 
-          final orders = snapshot.data ?? [];
+          if (snapshot.hasError) {
+            return const Center(child: Text("Terjadi kesalahan"));
+          }
 
-          int totalOrders = orders.length;
-          int totalIncome = orders.fold(0, (sum, item) => sum + item.total);
+          if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            return const Center(child: Text("Belum ada transaksi"));
+          }
+
+          final orders = snapshot.data!;
+
+          final totalOrder = orders.length;
+
+          final totalRevenue = orders.fold(0, (sum, item) => sum + item.total);
 
           return Column(
             children: [
-              // FILTER INFO
-              Container(
-                padding: const EdgeInsets.all(16),
-                color: Colors.white,
-                child: Column(
-                  children: [
-                    Text(
-                      "Period",
-                      style: const TextStyle(fontWeight: FontWeight.bold),
-                    ),
-
-                    const SizedBox(height: 8),
-
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(startDate.toString().substring(0, 10)),
-                        const Text("to"),
-                        Text(endDate.toString().substring(0, 10)),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-
-              const SizedBox(height: 10),
+              const ReportTableHeader(),
 
               Expanded(
-                child: Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 16),
-                  padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: orders.isEmpty
-                      ? const Center(child: Text("Tidak ada data laporan"))
-                      : ListView.builder(
-                          itemCount: orders.length,
-                          itemBuilder: (context, index) {
-                            final order = orders[index];
-
-                            return ListTile(
-                              title: Text(
-                                order.customerName,
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              subtitle: Text(order.status),
-                              trailing: Text(
-                                "Rp ${order.total}",
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            );
-                          },
-                        ),
+                child: ListView.builder(
+                  itemCount: orders.length,
+                  itemBuilder: (context, index) {
+                    return ReportTableRow(order: orders[index]);
+                  },
                 ),
               ),
 
               Container(
                 padding: const EdgeInsets.all(16),
-                color: Colors.white,
+                decoration: BoxDecoration(
+                  color: Colors.grey.shade200,
+                  border: const Border(top: BorderSide(color: Colors.grey)),
+                ),
                 child: Column(
                   children: [
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const Text("Total Orders"),
-                        Text("$totalOrders"),
+                        const Text(
+                          "Total Order",
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        Text(
+                          "$totalOrder",
+                          style: const TextStyle(fontWeight: FontWeight.bold),
+                        ),
                       ],
                     ),
+
                     const SizedBox(height: 10),
+
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const Text("Total Income"),
-                        Text("Rp $totalIncome"),
+                        const Text(
+                          "Total Revenue",
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        Text(
+                          "Rp ${NumberFormat('#,###', 'id_ID').format(totalRevenue)}",
+                          style: const TextStyle(
+                            color: Colors.green,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                          ),
+                        ),
                       ],
                     ),
                   ],

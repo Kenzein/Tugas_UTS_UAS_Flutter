@@ -6,7 +6,7 @@ import 'package:money_laundry/providers/auth_provider.dart';
 
 import 'package:money_laundry/screens/home/sidebar_screen/about.dart';
 import 'package:money_laundry/screens/auth/screens/login_screen.dart';
-import 'package:money_laundry/screens/home/sidebar_screen/profile_page.dart';
+import 'package:money_laundry/screens/home/sidebar_screen/profile_screen.dart';
 
 class AppSidebar extends StatelessWidget {
   const AppSidebar({super.key});

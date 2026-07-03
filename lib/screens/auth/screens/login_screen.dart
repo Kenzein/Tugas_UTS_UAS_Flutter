@@ -37,23 +37,19 @@ class _LoginPageState extends State<LoginPage> {
 
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(
-          builder: (_) => const HomePage(),
-        ),
+        MaterialPageRoute(builder: (_) => HomePage()),
       );
     } on LoginException catch (e) {
       if (!mounted) return;
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(e.message)),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(e.message)));
     } catch (e) {
       if (!mounted) return;
 
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("Terjadi kesalahan, silakan coba lagi."),
-        ),
+        const SnackBar(content: Text("Terjadi kesalahan, silakan coba lagi.")),
       );
     }
   }
@@ -87,10 +83,7 @@ class _LoginPageState extends State<LoginPage> {
                     SizedBox(height: 5),
                     Text(
                       "Welcome to Money Laundry",
-                      style: TextStyle(
-                        fontSize: 18,
-                        color: Colors.white,
-                      ),
+                      style: TextStyle(fontSize: 18, color: Colors.white),
                     ),
                     SizedBox(height: 40),
                   ],
@@ -104,14 +97,11 @@ class _LoginPageState extends State<LoginPage> {
                 padding: const EdgeInsets.all(30),
                 decoration: const BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadius.vertical(
-                    top: Radius.circular(30),
-                  ),
+                  borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-
                     const Text(
                       "Login",
                       style: TextStyle(
@@ -144,9 +134,7 @@ class _LoginPageState extends State<LoginPage> {
                       width: double.infinity,
                       height: 50,
                       child: ElevatedButton(
-                        onPressed: authProvider.isLoading
-                            ? null
-                            : _login,
+                        onPressed: authProvider.isLoading ? null : _login,
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFF6594B1),
                           shape: RoundedRectangleBorder(
@@ -179,9 +167,7 @@ class _LoginPageState extends State<LoginPage> {
                         onPressed: () {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(
-                              builder: (_) =>  RegisterPage(),
-                            ),
+                            MaterialPageRoute(builder: (_) => RegisterPage()),
                           );
                         },
                         child: const Text(
@@ -193,7 +179,6 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                       ),
                     ),
-
                   ],
                 ),
               ),

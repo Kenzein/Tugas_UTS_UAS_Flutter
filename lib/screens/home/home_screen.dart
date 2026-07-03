@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:money_laundry/models/user_model.dart';
+import 'package:money_laundry/screens/auth/services/user_service.dart';
 import 'package:money_laundry/screens/home/order_screen/order_screen.dart';
 import 'package:money_laundry/screens/home/list_order_screen/list_order_screen.dart';
 import 'package:money_laundry/screens/home/report_screen/report_screen.dart';
@@ -7,8 +9,9 @@ import 'package:money_laundry/screens/home/support_screen/support_screen.dart';
 import 'package:money_laundry/widgets/menu_item.dart';
 
 class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+  HomePage({super.key});
 
+  final UserService userService = UserService();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,7 +26,7 @@ class HomePage extends StatelessWidget {
                   width: double.infinity,
                   height: 300,
                   decoration: const BoxDecoration(
-                    color: Color(0xFF6E97B5),
+                    color: Color.fromRGBO(110, 151, 181, 1),
                     borderRadius: BorderRadius.only(
                       bottomRight: Radius.circular(60),
                     ),
@@ -76,30 +79,51 @@ class HomePage extends StatelessWidget {
                 child: ListView(
                   padding: const EdgeInsets.fromLTRB(16, 18, 16, 20),
                   children: [
-                    Container(
-                      padding: const EdgeInsets.all(18),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFF2F2F2),
-                        borderRadius: BorderRadius.circular(24),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text("Expired", style: TextStyle(fontSize: 16)),
-                          const SizedBox(height: 6),
-                          const Text(
-                            "26 Apr 2026",
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                            ),
+                    FutureBuilder<UserModel>(
+                      future: userService.getCurrentUser(),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return Container(
+                            height: 120,
+                            alignment: Alignment.center,
+                            child: const CircularProgressIndicator(),
+                          );
+                        }
+
+                        if (snapshot.hasError) {
+                          return const SizedBox();
+                        }
+
+                        final user = snapshot.data!;
+
+                        return Container(
+                          padding: const EdgeInsets.all(18),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFF2F2F2),
+                            borderRadius: BorderRadius.circular(24),
                           ),
-                          const SizedBox(height: 12),
-                          Divider(color: Colors.grey.shade400),
-                          const SizedBox(height: 12),
-                          const Text("Ken-Wash"),
-                        ],
-                      ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text(
+                                "Welcome Back 👋",
+                                style: TextStyle(fontSize: 16),
+                              ),
+
+                              const SizedBox(height: 8),
+
+                              Text(
+                                user.name,
+                                style: const TextStyle(
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
                     ),
 
                     const SizedBox(height: 22),
@@ -120,7 +144,6 @@ class HomePage extends StatelessWidget {
                       physics: const NeverScrollableScrollPhysics(),
                       mainAxisSpacing: 10,
                       crossAxisSpacing: 16,
-                      // ERROR DIPERBAIKI: Menghapus properti yang salah dan menyisakan satu yang benar
                       childAspectRatio: 1.3,
                       children: [
                         MenuItem(
@@ -143,7 +166,7 @@ class HomePage extends StatelessWidget {
                           title: 'Support',
                           page: const SupportScreen(),
                         ),
-                      ], // ERROR DIPERBAIKI: Menghapus satu penutup ']' yang berlebihan
+                      ],
                     ),
                   ],
                 ),
