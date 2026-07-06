@@ -12,9 +12,12 @@ class ReportTableRow extends StatelessWidget {
     final date = DateFormat("dd/MM/yy").format(order.createdAt);
 
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 12),
-      decoration: const BoxDecoration(
-        border: Border(bottom: BorderSide(color: Color(0xffE5E5E5))),
+      margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: const Color(0xFFF0F4F8)),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -22,7 +25,10 @@ class ReportTableRow extends StatelessWidget {
           // Date
           Expanded(
             flex: 2,
-            child: Text(date, style: const TextStyle(fontSize: 12)),
+            child: Text(
+              date,
+              style: const TextStyle(fontSize: 12, color: Color(0xFF64748B)),
+            ),
           ),
 
           // Customer
@@ -30,7 +36,10 @@ class ReportTableRow extends StatelessWidget {
             flex: 3,
             child: Text(
               order.customerName,
-              style: const TextStyle(fontWeight: FontWeight.w600),
+              style: const TextStyle(
+                fontWeight: FontWeight.w600,
+                color: Color(0xFF1F2937),
+              ),
             ),
           ),
 
@@ -45,7 +54,10 @@ class ReportTableRow extends StatelessWidget {
                       padding: const EdgeInsets.only(bottom: 2),
                       child: Text(
                         "• ${service.name}",
-                        style: const TextStyle(fontSize: 12),
+                        style: const TextStyle(
+                          fontSize: 12,
+                          color: Color(0xFF475569),
+                        ),
                       ),
                     ),
                   )
@@ -60,7 +72,7 @@ class ReportTableRow extends StatelessWidget {
               "Rp ${NumberFormat('#,###', 'id_ID').format(order.total)}",
               textAlign: TextAlign.end,
               style: const TextStyle(
-                color: Colors.green,
+                color: Color(0xFF0F766E),
                 fontWeight: FontWeight.bold,
               ),
             ),

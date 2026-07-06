@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:money_laundry/screens/auth/services/auth_service.dart';
 
 class AuthProvider extends ChangeNotifier {
-  final AuthService _authService = AuthService();
+  AuthService? _authService;
+
+  AuthService get _service => _authService ??= AuthService();
 
   bool _isLoading = false;
   bool _isLoggedIn = false;
@@ -16,7 +18,7 @@ class AuthProvider extends ChangeNotifier {
 
     try {
 
-      await _authService.login(email, password);
+      await _service.login(email, password);
 
       _isLoggedIn = true;
     } catch (e) {
@@ -27,8 +29,22 @@ class AuthProvider extends ChangeNotifier {
     }
   }
 
+  Future<void> resetPassword(String email) async {
+    _isLoading = true;
+    notifyListeners();
+
+    try {
+      await _service.resetPassword(email);
+    } catch (e) {
+      rethrow;
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
   Future<void> logout() async {
-    await _authService.logout();
+    await _service.logout();
 
     _isLoggedIn = false;
 
@@ -36,7 +52,7 @@ class AuthProvider extends ChangeNotifier {
   }
 
   Future<void> checkLogin() async {
-    _isLoggedIn = _authService.currentUser != null;
+    _isLoggedIn = _service.currentUser != null;
     notifyListeners();
   }
 }

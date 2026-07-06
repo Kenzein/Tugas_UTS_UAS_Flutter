@@ -77,102 +77,103 @@ class _RegisterPageState extends State<RegisterPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF6594B1),
+      backgroundColor: const Color(0xFF2F5274),
       body: SafeArea(
         child: Column(
           children: [
-            const Expanded(
-              flex: 2,
-              child: SizedBox(),
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.fromLTRB(24, 24, 24, 20),
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [Color(0xFF1E3C63), Color(0xFF2F5274)],
+                ),
+                borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(32),
+                  bottomRight: Radius.circular(32),
+                ),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  IconButton(
+                    onPressed: () => Navigator.pop(context),
+                    icon: const Icon(
+                      Icons.arrow_back,
+                      color: Colors.white,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  const Text(
+                    "Create Account",
+                    style: TextStyle(
+                      fontSize: 34,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  const Text(
+                    "Daftar sekarang untuk mulai mengelola bisnis laundry Anda dengan mudah.",
+                    style: TextStyle(fontSize: 15, color: Colors.white70, height: 1.6),
+                  ),
+                ],
+              ),
             ),
             Expanded(
-              flex: 5,
               child: Container(
-                padding: const EdgeInsets.all(20),
+                width: double.infinity,
+                padding: const EdgeInsets.fromLTRB(24, 24, 24, 24),
                 decoration: const BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadius.vertical(
-                    top: Radius.circular(30),
-                  ),
+                  borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
                 ),
                 child: ListView(
                   children: [
-                    Row(
-                      children: [
-                        IconButton(
-                          onPressed: () => Navigator.pop(context),
-                          icon: const Icon(
-                            Icons.arrow_back,
-                            color: Color(0xFF6594B1),
-                          ),
-                        ),
-                      ],
-                    ),
-
-                    const SizedBox(height: 10),
-
-                    const Text(
-                      "Sign Up",
-                      style: TextStyle(
-                        fontSize: 28,
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xFF6594B1),
-                      ),
-                    ),
-
-                    const SizedBox(height: 25),
-
+                    const SizedBox(height: 8),
                     CustomInput(
                       label: "Full Name",
                       controller: nameController,
                       icon: Icons.person,
                     ),
-
-                    const SizedBox(height: 15),
-
+                    const SizedBox(height: 16),
                     CustomInput(
                       label: "Email",
                       controller: emailController,
                       icon: Icons.email,
                     ),
-
-                    const SizedBox(height: 15),
-
+                    const SizedBox(height: 16),
                     CustomInput(
                       label: "Phone Number",
                       controller: phoneController,
                       icon: Icons.phone,
                     ),
-
-                    const SizedBox(height: 15),
-
+                    const SizedBox(height: 16),
                     CustomInput(
                       label: "Password",
                       controller: passwordController,
                       icon: Icons.lock,
                       isPassword: true,
                     ),
-
-                    const SizedBox(height: 15),
-
+                    const SizedBox(height: 16),
                     CustomInput(
                       label: "Confirm Password",
                       controller: confirmPasswordController,
                       icon: Icons.lock,
                       isPassword: true,
                     ),
-
-                    const SizedBox(height: 30),
-
+                    const SizedBox(height: 28),
                     SizedBox(
                       width: double.infinity,
-                      height: 50,
+                      height: 54,
                       child: ElevatedButton(
                         onPressed: isLoading ? null : _register,
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFF6594B1),
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(30),
+                            borderRadius: BorderRadius.circular(24),
                           ),
                         ),
                         child: isLoading
@@ -185,12 +186,26 @@ class _RegisterPageState extends State<RegisterPage> {
                                 ),
                               )
                             : const Text(
-                                "Register",
+                                "Create Account",
                                 style: TextStyle(
                                   fontSize: 18,
                                   color: Colors.white,
+                                  fontWeight: FontWeight.w600,
                                 ),
                               ),
+                      ),
+                    ),
+                    const SizedBox(height: 18),
+                    Center(
+                      child: TextButton(
+                        onPressed: () => Navigator.pop(context),
+                        child: const Text(
+                          "Already have an account? Login",
+                          style: TextStyle(
+                            color: Color(0xFF6594B1),
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
                       ),
                     ),
                   ],

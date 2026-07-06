@@ -40,50 +40,79 @@ class _OrderPageState extends State<OrderPage> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+    final cardColor = theme.cardColor;
+    final textColor = theme.textTheme.bodyMedium?.color ?? (isDark ? Colors.white : Colors.black);
+    final secondaryColor = isDark ? Colors.white70 : Colors.grey;
     final orderProvider = context.read<OrderProvider>();
     final serviceProvider = context.watch<ServiceProvider>();
     // final customerProvider = context.watch<CustomerProvider>();
     //
     return Scaffold(
-      backgroundColor: Colors.grey[200],
+      backgroundColor: theme.scaffoldBackgroundColor,
       body: SafeArea(
         child: Column(
           children: [
-            //
             Container(
-              padding: const EdgeInsets.all(16),
-              decoration: const BoxDecoration(
-                color: Color(0xFF6594B1),
-                borderRadius: BorderRadius.only(
+              padding: const EdgeInsets.fromLTRB(16, 12, 16, 18),
+              decoration: BoxDecoration(
+                gradient: const LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [
+                    Color(0xFF1F3E5A),
+                    Color(0xFF2F5274),
+                    Color(0xFF163247),
+                  ],
+                ),
+                borderRadius: const BorderRadius.only(
                   bottomLeft: Radius.circular(30),
                   bottomRight: Radius.circular(30),
                 ),
+                boxShadow: [
+                  BoxShadow(
+                    color: const Color(0xFF163247).withOpacity(0.22),
+                    blurRadius: 12,
+                    offset: const Offset(0, 6),
+                  ),
+                ],
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Center(
-                    child: Text(
-                      "Create Order",
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-
-                  const Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  Row(
                     children: [
-                      Text("2026/04/13", style: TextStyle(color: Colors.white)),
-                      Text("Ken-Wash", style: TextStyle(color: Colors.white)),
+                      IconButton(
+                        onPressed: () => Navigator.pop(context),
+                        icon: const Icon(Icons.arrow_back_ios_new, color: Colors.white),
+                        padding: EdgeInsets.zero,
+                        constraints: const BoxConstraints(),
+                      ),
+                      const Expanded(
+                        child: Center(
+                          child: Text(
+                            "Create Order",
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 24),
                     ],
                   ),
-
-                  const SizedBox(height: 15),
-
+                  const SizedBox(height: 12),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: const [
+                      Text("2026/04/13", style: TextStyle(color: Colors.white70)),
+                      Text("Ken-Wash", style: TextStyle(color: Colors.white70)),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
                   GestureDetector(
                     onTap: () async {
                       final customer = await Navigator.push(
@@ -103,8 +132,15 @@ class _OrderPageState extends State<OrderPage> {
                       height: 50,
                       padding: const EdgeInsets.symmetric(horizontal: 16),
                       decoration: BoxDecoration(
-                        color: Colors.white,
+                        color: cardColor,
                         borderRadius: BorderRadius.circular(25),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(isDark ? 0.18 : 0.08),
+                            blurRadius: 8,
+                            offset: const Offset(0, 3),
+                          ),
+                        ],
                       ),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -115,11 +151,15 @@ class _OrderPageState extends State<OrderPage> {
                                 : "${selectedCustomer!.name} (${selectedCustomer!.phone})",
                             style: TextStyle(
                               color: selectedCustomer == null
-                                  ? Colors.grey
-                                  : Colors.black,
+                                  ? secondaryColor
+                                  : textColor,
                             ),
                           ),
-                          const Icon(Icons.arrow_forward_ios, size: 18),
+                          Icon(
+                            Icons.arrow_forward_ios,
+                            size: 18,
+                            color: isDark ? Colors.white70 : Colors.grey.shade700,
+                          ),
                         ],
                       ),
                     ),
@@ -149,36 +189,104 @@ class _OrderPageState extends State<OrderPage> {
 
                   return ListView(
                     padding: const EdgeInsets.all(16),
-                    children: serviceProvider.services.map((service) {
-                      final isSelected = selectedServices.contains(service);
-
-                      return GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            if (isSelected) {
-                              selectedServices.remove(service);
-                            } else {
-                              selectedServices.add(service);
-                            }
-                          });
-                        },
-                        child: Card(
-                          color: isSelected ? Colors.blue[100] : Colors.white,
-                          child: ListTile(
-                            title: Text(service.name),
-                            subtitle: Text("Rp ${service.price}"),
-                            trailing: Icon(
-                              isSelected
-                                  ? Icons.check_circle
-                                  : Icons.circle_outlined,
-                              color: isSelected
-                                  ? const Color(0xFF6594B1)
-                                  : Colors.grey,
-                            ),
+                    children: [
+                      const Padding(
+                        padding: EdgeInsets.only(bottom: 10),
+                        child: Text(
+                          "Pilih layanan",
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xFF1F2937),
                           ),
                         ),
-                      );
-                    }).toList(),
+                      ),
+                      ...serviceProvider.services.map((service) {
+                        final isSelected = selectedServices.contains(service);
+
+                        return Padding(
+                          padding: const EdgeInsets.only(bottom: 10),
+                          child: GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                if (isSelected) {
+                                  selectedServices.remove(service);
+                                } else {
+                                  selectedServices.add(service);
+                                }
+                              });
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.all(14),
+                              decoration: BoxDecoration(
+                                color: isSelected ? const Color(0xFFEAF4FF) : Colors.white,
+                                borderRadius: BorderRadius.circular(16),
+                                border: Border.all(
+                                  color: isSelected
+                                      ? const Color(0xFF86B7E3)
+                                      : const Color(0xFFE5EEF5),
+                                  width: isSelected ? 1.4 : 1.0,
+                                ),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: const Color(0xFF2F5274).withOpacity(0.05),
+                                    blurRadius: 8,
+                                    offset: const Offset(0, 3),
+                                  ),
+                                ],
+                              ),
+                              child: Row(
+                                children: [
+                                  Container(
+                                    width: 44,
+                                    height: 44,
+                                    decoration: BoxDecoration(
+                                      color: isDark ? theme.dividerColor : const Color(0xFFEEF6FF),
+                                      shape: BoxShape.circle,
+                                    ),
+                                    child: Icon(
+                                      Icons.cleaning_services,
+                                      color: isDark ? Colors.white70 : const Color(0xFF2F5274),
+                                      size: 22,
+                                    ),
+                                  ),
+                                  const SizedBox(width: 12),
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          service.name,
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.w700,
+                                            color: textColor,
+                                          ),
+                                        ),
+                                        const SizedBox(height: 4),
+                                        Text(
+                                          "Rp ${service.price}",
+                                          style: TextStyle(
+                                            color: secondaryColor,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  Icon(
+                                    isSelected
+                                        ? Icons.check_circle
+                                        : Icons.circle_outlined,
+                                    color: isSelected
+                                        ? const Color(0xFF2F5274)
+                                        : Colors.grey,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        );
+                      }),
+                    ],
                   );
                 },
               ),
@@ -186,9 +294,16 @@ class _OrderPageState extends State<OrderPage> {
             //
             Container(
               padding: const EdgeInsets.all(16),
-              decoration: const BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+              decoration: BoxDecoration(
+                color: theme.cardColor,
+                borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(isDark ? 0.18 : 0.12),
+                    blurRadius: 10,
+                    offset: const Offset(0, -2),
+                  ),
+                ],
               ),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
@@ -197,29 +312,27 @@ class _OrderPageState extends State<OrderPage> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Text(
+                      Text(
                         "Total:",
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
+                          color: textColor,
                         ),
                       ),
                       Text(
                         "Rp ${getTotal()}",
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
-                          color: Colors.green,
+                          color: const Color(0xFF0F766E),
                         ),
                       ),
                     ],
                   ),
-
-                  const SizedBox(height: 10),
-
+                  const SizedBox(height: 16),
                   Row(
                     children: [
-                      //
                       Expanded(
                         child: ElevatedButton(
                           onPressed: () {
@@ -230,9 +343,10 @@ class _OrderPageState extends State<OrderPage> {
                             );
                           },
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFF6594B1),
+                            backgroundColor: const Color(0xFF2F5274),
                             foregroundColor: Colors.white,
                             shape: const StadiumBorder(),
+                            padding: const EdgeInsets.symmetric(vertical: 12),
                           ),
                           child: const Text("Batalkan"),
                         ),
@@ -240,7 +354,6 @@ class _OrderPageState extends State<OrderPage> {
 
                       const SizedBox(width: 10),
 
-                      //
                       Expanded(
                         child: ElevatedButton(
                           onPressed: () async {
@@ -286,9 +399,10 @@ class _OrderPageState extends State<OrderPage> {
                             );
                           },
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.orange,
+                            backgroundColor: const Color(0xFF0F766E),
                             foregroundColor: Colors.white,
                             shape: const StadiumBorder(),
+                            padding: const EdgeInsets.symmetric(vertical: 12),
                           ),
                           child: orderProvider.isLoading
                               ? const CircularProgressIndicator(

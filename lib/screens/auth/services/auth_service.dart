@@ -8,9 +8,7 @@ class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-
   User? get currentUser => _auth.currentUser;
-
 
   Future<void> login(String email, String password) async {
     if (email.trim().isEmpty) {
@@ -51,16 +49,13 @@ class AuthService {
           throw LoginException("Tidak dapat terhubung ke server.");
 
         default:
-          throw LoginException(
-            e.message ?? "Terjadi kesalahan saat login",
-          );
+          throw LoginException(e.message ?? "Terjadi kesalahan saat login");
       }
     } catch (_) {
       throw LoginException("Terjadi kesalahan saat login");
     }
   }
 
-  
   Future<void> register(
     String name,
     String email,
@@ -91,17 +86,13 @@ class AuthService {
 
     try {
       // Membuat akun Firebase Authentication
-      UserCredential credential =
-          await _auth.createUserWithEmailAndPassword(
+      UserCredential credential = await _auth.createUserWithEmailAndPassword(
         email: email.trim(),
         password: password,
       );
 
       // Menyimpan data user ke Firestore
-      await _firestore
-          .collection("users")
-          .doc(credential.user!.uid)
-          .set({
+      await _firestore.collection("users").doc(credential.user!.uid).set({
         "uid": credential.user!.uid,
         "name": name.trim(),
         "email": email.trim(),
@@ -124,14 +115,40 @@ class AuthService {
           throw RegisterException("Tidak dapat terhubung ke server.");
 
         default:
-          throw RegisterException(
-            e.message ?? "Gagal melakukan register",
-          );
+          throw RegisterException(e.message ?? "Gagal melakukan register");
       }
     } catch (_) {
-      throw RegisterException(
-        "Terjadi kesalahan saat register",
-      );
+      throw RegisterException("Terjadi kesalahan saat register");
+    }
+  }
+
+  Future<void> resetPassword(String email) async {
+    if (email.trim().isEmpty) {
+      throw LoginException("Email tidak boleh kosong");
+    }
+
+    if (!email.contains("@")) {
+      throw LoginException("Format email tidak valid");
+    }
+
+    try {
+      await _auth.sendPasswordResetEmail(email: email.trim());
+    } on FirebaseAuthException catch (e) {
+      switch (e.code) {
+        case "user-not-found":
+          throw LoginException("Email tidak ditemukan");
+
+        case "invalid-email":
+          throw LoginException("Format email tidak valid");
+
+        case "network-request-failed":
+          throw LoginException("Tidak dapat terhubung ke server.");
+
+        default:
+          throw LoginException(e.message ?? "Gagal mengirim link reset sandi");
+      }
+    } catch (_) {
+      throw LoginException("Terjadi kesalahan saat mengirim link reset sandi");
     }
   }
 

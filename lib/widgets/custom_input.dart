@@ -25,23 +25,25 @@ class _CustomInputState extends State<CustomInput> {
     return TextField(
       controller: widget.controller,
       obscureText: widget.isPassword ? isHidden : false,
-      style: const TextStyle(color: Colors.black),
+      style: const TextStyle(color: Color(0xFF0F172A)),
       decoration: InputDecoration(
         labelText: widget.label,
         labelStyle: const TextStyle(
-          fontWeight: FontWeight.bold,
-          color: Colors.grey,
+          fontWeight: FontWeight.w600,
+          color: Color(0xFF6B7280),
         ),
         prefixIcon: widget.icon != null
-            ? Icon(widget.icon, color: Colors.grey.shade700)
+            ? Icon(widget.icon, color: const Color(0xFF64748B))
             : null,
         filled: true,
-        fillColor: Colors.transparent,
-        enabledBorder: const UnderlineInputBorder(
-          borderSide: BorderSide(color: Colors.grey),
+        fillColor: const Color(0xFFF4F8FD),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(18),
+          borderSide: const BorderSide(color: Color(0xFFD1D5DB)),
         ),
-        focusedBorder: const UnderlineInputBorder(
-          borderSide: BorderSide(color: Colors.grey),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(18),
+          borderSide: const BorderSide(color: Color(0xFF94A3B8)),
         ),
         suffixIcon: widget.isPassword
             ? IconButton(
@@ -52,7 +54,7 @@ class _CustomInputState extends State<CustomInput> {
                 },
                 icon: Icon(
                   isHidden ? Icons.visibility_off : Icons.visibility,
-                  color: Colors.black,
+                  color: const Color(0xFF64748B),
                 ),
               )
             : null,

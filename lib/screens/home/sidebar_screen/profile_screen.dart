@@ -38,8 +38,7 @@ class _ProfilePageState extends State<ProfilePage> {
     final user = profile.user!;
 
     return Scaffold(
-      backgroundColor: const Color(0xFF6594B1),
-
+      backgroundColor: const Color(0xFFF6F9FC),
       appBar: AppBar(
         elevation: 0,
         centerTitle: true,
@@ -47,81 +46,87 @@ class _ProfilePageState extends State<ProfilePage> {
           "Profile",
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
-        backgroundColor: const Color(0xFF6594B1),
+        backgroundColor: const Color(0xFF2F5274),
         foregroundColor: Colors.white,
       ),
-
       body: SingleChildScrollView(
         child: Column(
           children: [
-            const SizedBox(height: 25),
-
-            Center(
-              child: CircleAvatar(
-                radius: 60,
-                backgroundColor: Colors.white,
-                child: CircleAvatar(
-                  radius: 56,
-                  backgroundImage: user.photo.isNotEmpty
-                      ? NetworkImage(user.photo)
-                      : const AssetImage("assets/images/appside.jpg")
-                            as ImageProvider,
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.fromLTRB(20, 24, 20, 32),
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [
+                    Color(0xFF1F3E5A),
+                    Color(0xFF2F5274),
+                    Color(0xFF163247),
+                  ],
+                ),
+                borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(32),
+                  bottomRight: Radius.circular(32),
                 ),
               ),
-            ),
-
-            const SizedBox(height: 20),
-
-            Text(
-              user.name,
-              style: const TextStyle(
-                fontSize: 30,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              ),
-            ),
-
-            const SizedBox(height: 8),
-
-            Text(
-              user.email,
-              style: const TextStyle(fontSize: 17, color: Colors.white70),
-            ),
-
-            const SizedBox(height: 35),
-
-            Container(
-              margin: const EdgeInsets.symmetric(horizontal: 20),
-              padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(25),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black12,
-                    blurRadius: 12,
-                    offset: const Offset(0, 5),
+              child: Column(
+                children: [
+                  CircleAvatar(
+                    radius: 58,
+                    backgroundColor: Colors.white.withOpacity(0.24),
+                    child: CircleAvatar(
+                      radius: 54,
+                      backgroundImage: user.photo.isNotEmpty
+                          ? NetworkImage(user.photo)
+                          : const AssetImage("assets/images/appside.jpg") as ImageProvider,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    user.name,
+                    style: const TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+                  const SizedBox(height: 6),
+                  Text(
+                    user.email,
+                    style: const TextStyle(fontSize: 14, color: Colors.white70),
                   ),
                 ],
               ),
-
-              child: Column(
-                children: [
-                  buildInfoTile(Icons.person, "Nama", user.name),
-
-                  const Divider(),
-
-                  buildInfoTile(Icons.email, "Email", user.email),
-
-                  const Divider(),
-
-                  buildInfoTile(Icons.phone, "Nomor HP", user.phone),
-                ],
+            ),
+            Transform.translate(
+              offset: const Offset(0, -18),
+              child: Container(
+                margin: const EdgeInsets.symmetric(horizontal: 20),
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(24),
+                  boxShadow: [
+                    BoxShadow(
+                      color: const Color(0xFF2F5274).withOpacity(0.08),
+                      blurRadius: 12,
+                      offset: const Offset(0, 6),
+                    ),
+                  ],
+                ),
+                child: Column(
+                  children: [
+                    buildInfoTile(Icons.person, "Nama", user.name),
+                    const Divider(height: 1),
+                    buildInfoTile(Icons.email, "Email", user.email),
+                    const Divider(height: 1),
+                    buildInfoTile(Icons.phone, "Nomor HP", user.phone),
+                  ],
+                ),
               ),
             ),
-
-            const SizedBox(height: 30),
-
+            const SizedBox(height: 16),
             SizedBox(
               width: 250,
               height: 50,
@@ -144,16 +149,15 @@ class _ProfilePageState extends State<ProfilePage> {
                   style: TextStyle(fontSize: 16),
                 ),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.white,
-                  foregroundColor: const Color(0xFF6594B1),
+                  backgroundColor: const Color(0xFF2F5274),
+                  foregroundColor: Colors.white,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(30),
                   ),
                 ),
               ),
             ),
-
-            const SizedBox(height: 15),
+            const SizedBox(height: 24),
           ],
         ),
       ),
