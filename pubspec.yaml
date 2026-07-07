@@ -19,6 +19,7 @@ dependencies:
   qr_flutter: ^4.1.0
   shared_preferences: ^2.5.5
   sqflite: ^2.4.3
+  path: ^1.9.1
 
 
 

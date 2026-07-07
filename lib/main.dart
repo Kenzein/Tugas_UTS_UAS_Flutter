@@ -1,7 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:money_laundry/providers/customer_provider.dart';
-import 'package:money_laundry/providers/history_provider.dart';
 import 'package:money_laundry/providers/service_provider.dart';
 import 'package:provider/provider.dart';
 import 'firebase_options.dart';
@@ -39,7 +38,6 @@ class MainApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => ServiceProvider()),
         ChangeNotifierProvider(create: (_) => CustomerProvider()),
         ChangeNotifierProvider(create: (_) => ThemeProvider()),
-        ChangeNotifierProvider(create: (_) => HistoryProvider()),
       ],
       child: Consumer<ThemeProvider>(
         builder: (context, themeProvider, child) {

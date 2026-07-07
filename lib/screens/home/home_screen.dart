@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:money_laundry/models/user_model.dart';
 import 'package:money_laundry/screens/auth/services/user_service.dart';
-import 'package:money_laundry/screens/home/history/history_screen.dart';
 import 'package:money_laundry/screens/home/order_screen/order_screen.dart';
 import 'package:money_laundry/screens/home/list_order_screen/list_order_screen.dart';
 import 'package:money_laundry/screens/home/report_screen/report_screen.dart';
@@ -241,11 +240,6 @@ class _HomePageState extends State<HomePage> {
                           imagePath: 'assets/images/report.jpg',
                           title: 'Report',
                           page: const ReportScreen(),
-                        ),
-                        MenuItem(
-                          imagePath: 'assets/images/service.jpg',
-                          title: 'History',
-                          page: const HistoryScreen(),
                         ),
                         MenuItem(
                           imagePath: 'assets/images/service.jpg',

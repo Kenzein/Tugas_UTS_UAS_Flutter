@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:money_laundry/models/order_history.dart';
 import 'package:money_laundry/models/order_model.dart';
 import 'package:money_laundry/models/service.dart';
-import 'package:money_laundry/services/history_service.dart';
 
 class OrderProvider extends ChangeNotifier {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  final HistoryService _historyService = HistoryService();
 
   bool isLoading = false;
 
@@ -111,87 +108,11 @@ class OrderProvider extends ChangeNotifier {
     });
   }
 
-  // Future<void> updateStatus(String orderId, String status) async {
-  //   // Update status di Firestore
-  //   await _firestore.collection("orders").doc(orderId).update({
-  //     "status": status,
-  //   });
-
-  //   if (status != "Selesai") return;
-
-  //   final doc = await _firestore.collection("orders").doc(orderId).get();
-
-  //   if (!doc.exists) return;
-
-  //   final data = doc.data()!;
-
-  //   final history = OrderHistoryModel(
-  //     id: doc.id,
-  //     customerName: data["customerName"] ?? "",
-  //     customerPhone: data["customerPhone"] ?? "",
-  //     services: (data["services"] as List)
-  //         .map((e) => Service.fromJson(Map<String, dynamic>.from(e)))
-  //         .toList(),
-  //     total: data["total"] ?? 0,
-  //     status: "Selesai",
-  //     createdAt: (data["createdAt"] as Timestamp).toDate(),
-  //   );
-
-  //   await _historyService.insert(history);
-  // }
-
   Future<void> updateStatus(String orderId, String status) async {
-    print("========== UPDATE STATUS ==========");
-    print("Order ID : $orderId");
-    print("Status   : $status");
-
-    try {
-      await _firestore.collection("orders").doc(orderId).update({
-        "status": status,
-      });
-
-      print("Firestore update berhasil");
-
-      if (status != "Selesai") {
-        print("Status bukan selesai");
-        return;
-      }
-
-      print("Mengambil data order...");
-
-      final doc = await _firestore.collection("orders").doc(orderId).get();
-
-      print("Document exists : ${doc.exists}");
-
-      if (!doc.exists) return;
-
-      final data = doc.data()!;
-
-      print("Data Firestore:");
-      print(data);
-
-      final history = OrderHistoryModel(
-        id: doc.id,
-        customerName: data["customerName"] ?? "",
-        customerPhone: data["customerPhone"] ?? "",
-        services: (data["services"] as List)
-            .map((e) => Service.fromJson(Map<String, dynamic>.from(e)))
-            .toList(),
-        total: data["total"] ?? 0,
-        status: "Selesai",
-        createdAt: (data["createdAt"] as Timestamp).toDate(),
-      );
-
-      print("OrderHistory berhasil dibuat");
-
-      await _historyService.insert(history);
-
-      print("SQLite INSERT BERHASIL");
-    } catch (e, s) {
-      print("ERROR UPDATE STATUS");
-      print(e);
-      print(s);
-    }
+    // Update status di Firestore
+    await _firestore.collection("orders").doc(orderId).update({
+      "status": status,
+    });
   }
 
   Future<void> deleteOrder(String orderId) async {
